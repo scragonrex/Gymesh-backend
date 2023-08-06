@@ -4,12 +4,13 @@ import User from "../models/User.js";
 export const createGoal = async (req, res) => {
     try {
         const { userId, startDate, progress, excercise, frequency } = req.body;
+        console.log(req.body);
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).send("User not found");
         }
         else {
-            const goal = await Goal.findOne({ excercise });
+            const goal = user.goals.find((item)=>item.excercise==excercise)
 
             if (goal)
                 res.status(405).json("Excercise already exist");
@@ -26,7 +27,7 @@ export const createGoal = async (req, res) => {
                 const newGoals= user.goals.concat(savedGoal);
                 const output = await user.updateOne({goals:newGoals})
                 console.log(output);
-                res.status(201).json(savedGoal);
+                res.status(201).json({status:"success",message:"goal created successfully"});
             }
         }
 
@@ -37,11 +38,11 @@ export const createGoal = async (req, res) => {
 
 export const getGoals = async(req,res)=>{
     try {
-        const {id} = req.params;
-        const user = await User.findById(id);
-        if(user)
+        const goals = await Goal.find();
+        console.log(goals)
+        if(goals)
         {
-            return res.status(200).json(user.goals)
+            return res.status(200).json(goals)
         }
        
     } catch (err) {
@@ -53,15 +54,21 @@ export const getGoals = async(req,res)=>{
 export const addScore = async(req,res)=>{
     try {
         const {id} = req.params;
-        const {score}= req.body;
+        const {score, newProgress, goalId}= req.body;
+        console.log(req.body);
         const user = await User.findById(id);
 
         if(user)
         {
             const newScore = score + user.score;
-            const output = await user.updateOne({score:newScore});
-            console.log(output);
-            return res.status(200).json({status:"success", message:"Added score"})
+            const goal = await Goal.findById(goalId);
+            console.log(goal);
+            const output1 = await user.updateOne({score:newScore});
+            goal.progress = newProgress;
+            const output2 = await goal.save();
+
+            console.log(output1,output2);
+            return res.status(200).json({status:"success", message:"Added score", score:newScore})
         }
         else
         return res.status(500).json({status:"error", message:"Internal server error"})
