@@ -6,7 +6,8 @@ const UserScheme = new mongoose.Schema({
     gender:String,
     email:String,
     password:String,
-    muscleScore:Number
+    score:{type:Number, default:0},
+    goals:Array
 }, {timestamps:true});
 
 const User = mongoose.model("User", UserScheme);
