@@ -8,7 +8,7 @@ export const signup = async(req,res)=>{
         const {name, email, password} = req.body;
         let user = await User.findOne({email:req.body.email});
         if(user)
-        {res.status(400).json({error:"The user already exists"});}
+        {res.status(400).json({status:"error",msg:"The user already exists"});}
         else{
             const salt = await bcrypt.genSalt();
             const passwordHash = await bcrypt.hash(password,salt);
@@ -20,12 +20,13 @@ export const signup = async(req,res)=>{
             });
     
             const savedUser = await newUser.save();
-            res.status(201).json(savedUser);
+            res.status(201).json({status:"success", msg:"User created successfully", savedUser});
         }
 
        
-    } catch (error) {
-        res.status(500).json({error:error.message})
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({status:"error",msg:"Internal server error"})
     }
 }
 
