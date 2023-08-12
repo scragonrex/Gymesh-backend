@@ -35,13 +35,14 @@ export const login = async(req,res)=>{
     try {
         const {email, password} = req.body;
         const user = await User.findOne({email:email});
-        if(!user) return res.status(400).json({msg:'User not found'});
+        if(!user) return res.status(404).json({status:"error",msg:'User not found'});
         const isMatch = await bcrypt.compare(password, user.password);
-        if(!isMatch) return res.status(400).json({msg:'Incorrect password'});
+        if(!isMatch) return res.status(401).json({status:"error",msg:'Incorrect password'});
         const token = jwt.sign({id:user.id}, process.env.JWT_SECRET);
         delete user.password;  //Check the response in the frontend that password is visible or not
         res.status(200).json({token,user});
-    } catch (error) {
-        res.status(500).json({error:error.message})
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({status:"error",msg:'Internal server error'})
     }
 }

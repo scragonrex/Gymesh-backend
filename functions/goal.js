@@ -55,23 +55,21 @@ export const addScore = async(req,res)=>{
     try {
         const {id} = req.params;
         const {score, newProgress, goalId}= req.body;
-        console.log(req.body);
         const user = await User.findById(id);
 
         if(user)
         {
             const newScore = score + user.score;
             const goal = await Goal.findById(goalId);
-            console.log(goal);
             const output1 = await user.updateOne({score:newScore});
             goal.progress = newProgress;
             const output2 = await goal.save();
 
             console.log(output1,output2);
-            return res.status(200).json({status:"success", message:"Added score", score:newScore})
+            return res.status(200).json({status:"success", msg:"Goal submitted successfully", score:newScore})
         }
         else
-        return res.status(500).json({status:"error", message:"Internal server error"})
+        return res.status(500).json({status:"error", msg:"Internal server error"})
         
     } catch (err) {
         console.log(err.message);
