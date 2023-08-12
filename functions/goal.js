@@ -13,7 +13,7 @@ export const createGoal = async (req, res) => {
             const goal = user.goals.find((item)=>item.excercise==excercise)
 
             if (goal)
-                res.status(405).json("Excercise already exist");
+                res.status(405).json({status:"error",msg:"Excercise already exist"});
             else {
 
                 const newGoal = new Goal({
@@ -27,12 +27,13 @@ export const createGoal = async (req, res) => {
                 const newGoals= user.goals.concat(savedGoal);
                 const output = await user.updateOne({goals:newGoals})
                 console.log(output);
-                res.status(201).json({status:"success",message:"goal created successfully"});
+                res.status(201).json({status:"success",msg:"Goal created successfully"});
             }
         }
 
     } catch (err) {
-        res.status(404).json(err.message);
+        console.log(err.message)
+        res.status(404).json({status:"error",msg:"Internal server error"});
     }
 }
 
