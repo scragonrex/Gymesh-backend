@@ -4,5 +4,5 @@ import { verifyToken } from "../middleware/index.js";
 import { createGoal } from "../functions/goal.js";
 const router = express.Router();
 
-router.post('/addProfile/:id',verifyToken, addUserInfo);
+router.post('/addProfile',verifyToken, addUserInfo);
 export default router;

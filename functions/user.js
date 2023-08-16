@@ -3,7 +3,7 @@ import User from "../models/User.js";
 export const addUserInfo = async(req,res)=>{
     try {
         const {name, weight, age, gender} = req.body;
-        const {id} = req.params;
+        const id = req.user.id;
         const user = await User.findById(id);
         if(!user)
         {
