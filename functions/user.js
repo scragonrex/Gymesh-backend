@@ -33,3 +33,29 @@ export const addUserInfo = async(req,res)=>{
         return res.status(404).json({status:"error", message:"Internal server error"});
     }
 }
+
+export const getLeaderBoardScore = async(req,res)=>{
+    
+    try {
+        const users = await User.find();
+        if(users)
+        {
+            users.sort((a,b)=>
+            {
+                return b.score-a.score;
+            });
+            const temp = users.map((item)=>{
+                return {
+                    name:item.name,
+                    score:item.score
+                }
+            })
+            return res.status(200).json({
+                status:"success",
+                users:temp,
+            })
+        } 
+    } catch (err) {
+        return res.status(404).json({status:"error", message:"Internal server error"});
+    }
+}
