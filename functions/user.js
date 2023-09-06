@@ -1,3 +1,4 @@
+import Review from "../models/Review.js";
 import User from "../models/User.js";
 
 export const addUserInfo = async(req,res)=>{
@@ -55,6 +56,29 @@ export const getLeaderBoardScore = async(req,res)=>{
                 users:temp,
             })
         } 
+    } catch (err) {
+        return res.status(404).json({status:"error", message:"Internal server error"});
+    }
+}
+
+export const addReview = async(req,res)=>{
+    try {
+        console.log(req.body);
+        const {rname, rdesignation, review} = req.body;
+        const newReview = new Review({
+            name:rname,designation:rdesignation,review
+        });
+        const output = await newReview.save();
+        console.log(output);
+        return res.status(201).json({status:"success",message:"Thank you for taking the time to review"});
+    } catch (err) {
+        return res.status(404).json({status:"error", message:"Internal server error"});
+    }
+}
+export const getReviews = async(req,res)=>{
+    try {
+        const reviews = await Review.find();
+        return res.status(200).json({status:"success",reviews:reviews});
     } catch (err) {
         return res.status(404).json({status:"error", message:"Internal server error"});
     }
