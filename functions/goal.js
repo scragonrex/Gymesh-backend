@@ -68,8 +68,6 @@ export const deleteGoal = async(req,res)=>{
     }
 }
 
-
-
 export const addScore = async(req,res)=>{
     try {
         const id = req.user.id;
@@ -83,6 +81,7 @@ export const addScore = async(req,res)=>{
             const output1 = await user.updateOne({score:newScore});
             goal.progress = newProgress;
             goal.progressValue = score;
+            if(score===100) goal.status = "completed";
             const output2 = await goal.save();
 
             return res.status(200).json({status:"success", msg:"Goal submitted successfully", score:newScore})
@@ -94,4 +93,24 @@ export const addScore = async(req,res)=>{
         console.log(err.message);
         return res.status(500).json({status:"error", message:"Internal server error"})
     }
+}
+
+//To verify if the goals are expired or not completed
+export const verifyGoals = async(id)=>{
+    const goals = await Goal.find({userId:id});
+    const expiredGoals = [];
+    goals.forEach(async(item)=>{
+        const endDate = new Date(item.startDate);
+        endDate.setDate(endDate.getDate() + 7);
+        const todayDate = new Date();
+        if(todayDate.getTime() > endDate.getTime())
+        {
+            console.log("expired",item);
+            if(item.progressValue<100)
+            {const output = await Goal.findByIdAndUpdate(item.id, {status:"not completed"});
+            console.log(output);
+        
+        }
+        }
+    })    
 }

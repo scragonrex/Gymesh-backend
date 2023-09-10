@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
+import { verifyGoals } from "./goal.js";
 
 //Register or Signup
 export const signup = async(req,res)=>{
@@ -40,6 +41,7 @@ export const login = async(req,res)=>{
         if(!isMatch) return res.status(401).json({status:"error",msg:'Incorrect password'});
         const token = jwt.sign({id:user.id}, process.env.JWT_SECRET);
         delete user.password;  //Check the response in the frontend that password is visible or not
+        await verifyGoals(user.id);
         res.status(200).json({token,user});
     } catch (err) {
         console.log(err.message)
