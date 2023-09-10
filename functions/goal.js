@@ -82,6 +82,7 @@ export const addScore = async(req,res)=>{
             const goal = await Goal.findById(goalId);
             const output1 = await user.updateOne({score:newScore});
             goal.progress = newProgress;
+            goal.progressValue = score;
             const output2 = await goal.save();
 
             return res.status(200).json({status:"success", msg:"Goal submitted successfully", score:newScore})

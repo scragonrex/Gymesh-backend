@@ -5,7 +5,8 @@ const goalSchema = new mongoose.Schema({
     startDate:Date,
     excercise:String,
     frequency:String,
-    progress:{type:Array, default:[]}
+    progress:{type:Array, default:[]},
+    progressValue:Number
 });
 
 const Goal = mongoose.model("Goal", goalSchema);
