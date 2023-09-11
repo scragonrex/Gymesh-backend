@@ -64,14 +64,17 @@ export const getUserGoalsInfo = async (req, res) => {
         const goals = await Goal.find({ userId: id });
         let completedGoals = [];
         let progressGoals = [];
+        let notCompletedGoals = [];
         goals.forEach((item) => {
-            if (item.progressValue === 100)
+            if (item.status === "completed")
                 completedGoals.push(item);
+            else if (item.status === "not completed")
+                notCompletedGoals.push(item);
             else
                 progressGoals.push(item);
         })
 
-        return res.status(200).json({ status: "success", message: "goals found", completedGoals, progressGoals });
+        return res.status(200).json({ status: "success", message: "goals found", completedGoals, progressGoals, notCompletedGoals});
 
     } catch (err) {
         return res.status(404).json({ status: "error", message: "Internal server error" });
