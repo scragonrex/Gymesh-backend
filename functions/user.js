@@ -38,6 +38,7 @@ export const getLeaderBoardScore = async (req, res) => {
 
     try {
         const users = await User.find();
+        console.log("incoming")
         if (users) {
             users.sort((a, b) => {
                 return b.score - a.score;

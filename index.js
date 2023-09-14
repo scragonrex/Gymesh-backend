@@ -9,7 +9,8 @@ import User from './models/User.js';
 import Goal from './models/Goal.js';
 const app = express();
 app.use(express.json()); //to recieve the data in json format
-app.use(cors());
+app.use(cors()); 
+
 const port = process.env.PORT || 5000;
 dotenv.config();
 
@@ -17,8 +18,6 @@ dotenv.config();
 app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
 app.use("/goals", goalRoute);
-// app.post("/login",login);
-// app.use("/profile", );
 
 const getUserGoalsInfo = async (req, res) => {
 

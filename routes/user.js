@@ -4,7 +4,7 @@ import { verifyToken } from "../middleware/index.js";
 const router = express.Router();
 
 router.post('/addProfile',verifyToken, addUserInfo);
-router.get('/getLeaderBoard',verifyToken,getLeaderBoardScore);
+router.get('/getLeaderBoard',getLeaderBoardScore);
 router.get('/getUserGoalsInfo',verifyToken,getUserGoalsInfo);
 router.get('/getReviews',getReviews);
 router.post('/addReview',addReview);
